@@ -18,7 +18,7 @@
 
         <q-toolbar-title>
           JHSOFT
-          <div slot="subtitle">Software administrativo Supercarnes JH</div>
+          <div slot="subtitle">Pedidos JH</div>
         </q-toolbar-title>
       </q-toolbar>
     </q-header>

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import jhsoft from './module-jhsoft'
+import pedidosjh from './module-pedidosjh'
 
 Vue.use(Vuex)
 
@@ -13,7 +13,7 @@ Vue.use(Vuex)
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
-      jhsoft
+      pedidosjh
     }
   })
 
