@@ -17,7 +17,7 @@
         </q-btn>
 
         <q-toolbar-title>
-          JHSOFT
+          Pedidos JH
           <div slot="subtitle">Pedidos JH</div>
         </q-toolbar-title>
       </q-toolbar>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CreateSingle urlAPI="api/generales/unidades" titulo="Unidades"/>
+    <CreateSingle urlAPI="api/tipoalmacen" titulo="Unidades"/>
   </div>
 </template>
 
@@ -9,7 +9,7 @@
 import CreateSingle from 'components/generales/CreateSingle.vue'
 
 export default {
-  name: 'PageGenUnidades',
+  name: 'PageCreateVencimiento',
   components: {
     CreateSingle
   }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CreateSingle urlAPI="api/productos/almacenamiento" titulo="Tipos de almacenamiento"/>
+    <CreateSingle urlAPI="api/tipoalmacen" titulo="Grupos"/>
   </div>
 </template>
 
@@ -9,7 +9,7 @@
 import CreateSingle from 'components/generales/CreateSingle.vue'
 
 export default {
-  name: 'PageProdAlmacenamiento',
+  name: 'PageCreateVencimiento',
   components: {
     CreateSingle
   }
