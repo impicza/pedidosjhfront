@@ -38,7 +38,7 @@ export const globalFunctions = {
     },
     async globalEditEstateItem (id, text) {
       try {
-        let response = await axios.get(this.$store.state.jhsoft.url + this.urlAPI + '/estado/' + id + '/' + text)
+        let response = await axios.get(this.$store.state.pedidosjh.url + this.urlAPI + '/estado/' + id + '/' + text)
         if (response.data === true) {
           this.$q.notify({ color: 'primary', message: 'item modificado!' })
         } else {
@@ -52,7 +52,7 @@ export const globalFunctions = {
     },
     async globalGetItemInfo (id) {
       try {
-        let data = await axios.get(this.$store.state.jhsoft.url + this.urlAPI + '/' + id)
+        let data = await axios.get(this.$store.state.pedidosjh.url + this.urlAPI + '/' + id)
         var response = data.data
         this.storeItems = response
         this.showForUpdate = true
@@ -65,7 +65,7 @@ export const globalFunctions = {
     async globalDeleteItem (id) {
       let data
       try {
-        data = await axios.delete(this.$store.state.jhsoft.url + this.urlAPI + '/' + id)
+        data = await axios.delete(this.$store.state.pedidosjh.url + this.urlAPI + '/' + id)
         if (data.data === 'done') {
           this.$q.notify({ color: 'positive', message: 'Item Eliminado!' })
         } else {
@@ -80,7 +80,7 @@ export const globalFunctions = {
     async globalGetItems () {
       this.$q.loading.show()
       try {
-        await axios.get(this.$store.state.jhsoft.url + this.urlAPI).then((response) => {
+        await axios.get(this.$store.state.pedidosjh.url + this.urlAPI).then((response) => {
           this.tableData = response.data
         })
       } catch (error) {
@@ -104,7 +104,7 @@ export const globalFunctions = {
         this.$q.notify({ color: 'warning', message: 'Guardando item...' })
         try {
           let response = await axios.post(
-            this.$store.state.jhsoft.url + this.urlAPI, this.storeItems
+            this.$store.state.pedidosjh.url + this.urlAPI, this.storeItems
           )
           if (response.data === 'done') { // si se desea restaurar el formulario el api debe devolver "done"
             for (const prop in this.storeItems) {
@@ -147,7 +147,7 @@ export const globalFunctions = {
         this.$q.notify({ color: 'warning', message: 'Guardando item...' })
         try {
           let response = await axios.put(
-            this.$store.state.jhsoft.url + this.urlAPI + '/' + id, this.storeItems
+            this.$store.state.pedidosjh.url + this.urlAPI + '/' + id, this.storeItems
           )
           if (response.data === 'done') { // si se desea restaurar el formulario el api debe devolver "done"
             for (const prop in this.storeItems) {
@@ -179,7 +179,7 @@ export const globalFunctions = {
       this.$q.loading.show()
       var list
       try {
-        let data = await axios.get(this.$store.state.jhsoft.url + url)
+        let data = await axios.get(this.$store.state.pedidosjh.url + url)
         // var response = data.data
         // response.forEach(element => {
         //   element.value = element.id

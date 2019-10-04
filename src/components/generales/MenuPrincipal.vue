@@ -8,7 +8,7 @@
           expand-icon-class="text-white"
         >
           <div class="expansion-items">
-            <router-link to="/pedidos" class="menuItem">Crear Productos</router-link>
+            <router-link to="/pedidos" class="menuItem">Crear Pedido</router-link>
           </div>
         </q-expansion-item>
         <q-expansion-item

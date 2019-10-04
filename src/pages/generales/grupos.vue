@@ -1,6 +1,6 @@
 <template>
   <div>
-    <CreateSingle urlAPI="api/tipoalmacen" titulo="Grupos"/>
+    <CreateSingle urlAPI="api/generales/grupos" titulo="Grupos"/>
   </div>
 </template>
 

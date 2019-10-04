@@ -14,10 +14,8 @@
                     option-label="nombre"
                     label="Producto"
                     option-disable="inactive"
-                    emit-value
-                    map-options
                     input-debounce="0"
-                    :options="options.prodcutos"
+                    :options="options.productos"
                     @filter="filterProductos"
                   >
                     <template v-slot:no-option>
@@ -43,8 +41,8 @@
                     emit-value
                     map-options
                     input-debounce="0"
-                    :options="options.clientes"
-                    @filter="filterClientes"
+                    :options="options.unidades"
+                    @filter="filterUnidades"
                   >
                     <template v-slot:no-option>
                       <q-item>
@@ -59,7 +57,7 @@
                 <q-input type="number" v-model="temp.cantidad" label="Cantidad"/>
               </div>
               <div class="col-2">
-                <q-btn color="positive" v-on:click="globalValidate('guardar')" label="Agregar" />
+                <q-btn color="positive" v-on:click="addProducto()" label="Agregar" />
               </div>
               <div class="col-2">
                 <q-btn color="primary" v-on:click="globalValidate('guardar')" label="Guardar" />
@@ -109,12 +107,14 @@ export default {
   data () {
     return {
       urlAPI: 'api/despachos/crearporlote',
+      productos: [],
+      unidades: [],
       storeItems: {
         productos: []
       },
       datos: {
         productosCerdo: [],
-        productosRed: []
+        productosRes: []
       },
       temp: {
         producto: null,
@@ -122,23 +122,77 @@ export default {
         cantidad: null
       },
       options: {
-        productos: [],
-        unidades: []
+        productos: this.productos,
+        unidades: this.unidades
       },
       columnsProductos: [
-        { name: 'nombre', required: true, label: 'Nombre', align: 'left', field: 'nombre_producto', sortable: true, classes: 'my-class', style: 'width: 200px' },
-        { name: 'unidades', required: true, label: 'Unidades', align: 'left', field: 'unidades', sortable: true, classes: 'my-class', style: 'width: 200px' },
-        { name: 'peso', required: true, label: 'Peso', align: 'left', field: 'peso', sortable: true, classes: 'my-class', style: 'width: 200px' },
+        { name: 'producto_nombre', required: true, label: 'Nombre', align: 'left', field: 'producto_nombre', sortable: true, classes: 'my-class', style: 'width: 200px' },
+        { name: 'unidad_nombre', required: true, label: 'Unidades', align: 'left', field: 'unidad_nombre', sortable: true, classes: 'my-class', style: 'width: 200px' },
+        { name: 'cantidad', required: true, label: 'Cantidad', align: 'left', field: 'cantidad', sortable: true, classes: 'my-class', style: 'width: 200px' },
         { name: 'actions', required: true, label: 'Acciones', align: 'left', field: 'id', sortable: true, classes: 'my-class', style: 'width: 200px' }
-      ]
+      ],
+      separator: 'horizontal'
     }
   },
   mixins: [globalFunctions],
   methods: {
     preSave () {
+      this.datos.productosCerdo.forEach((item) => {
+        this.storeItems.productos.push(item)
+      })
+      this.datos.productosRes.forEach((item) => {
+        this.storeItems.productos.push(item)
+      })
     },
     postSave () {
+    },
+    filterProductos (val, update, abort) {
+      update(() => {
+        const needle = val.toLowerCase()
+        this.options.productos = this.productos.filter(v => v.nombre.toLowerCase().indexOf(needle) > -1)
+      })
+    },
+    filterUnidades (val, update, abort) {
+      update(() => {
+        const needle = val.toLowerCase()
+        this.options.unidades = this.unidades.filter(v => v.nombre.toLowerCase().indexOf(needle) > -1)
+      })
+    },
+    addProducto () {
+      if (this.temp.producto.grupo === 'Cerdo') {
+        this.datos.productosCerdo.push({
+          id: 'nuevo' + parseInt(this.datos.productosCerdo.length),
+          producto_id: this.temp.producto.id,
+          producto_nombre: this.temp.producto.nombre,
+          cantidad: this.temp.cantidad,
+          unidad_id: this.temp.unidades.id,
+          unidad_nombre: this.temp.unidades.nombre
+        })
+      }
+      if (this.temp.producto.grupo === 'Res') {
+        this.datos.productosRes.push({
+          id: 'nuevo' + parseInt(this.datos.productosRes.length),
+          producto_id: this.temp.producto.id,
+          producto_nombre: this.temp.producto.nombre,
+          cantidad: this.temp.cantidad,
+          unidad_id: this.temp.unidades.id,
+          unidad_nombre: this.temp.unidades.nombre
+        })
+      }
+      this.temp = {
+        producto: null,
+        unidades: null,
+        cantidad: null
+      }
     }
+  },
+  created: function () {
+    this.globalGetForSelect('api/generales/unidades').then(v => {
+      this.unidades = v
+    })
+    this.globalGetForSelect('api/generales/productos').then(v => {
+      this.productos = v
+    })
   }
 }
 </script>

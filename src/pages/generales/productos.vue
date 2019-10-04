@@ -1,12 +1,12 @@
 <template>
     <div>
         <q-page padding>
-            <h3>Crear Pedido</h3>
+            <h3>Crear Productos</h3>
             <div class="row q-col-gutter-md">
               <div class="col-3">
                 <q-select
                     class="w-100"
-                    v-model="temp.producto"
+                    v-model="storeItems.grupo_id"
                     use-input
                     hide-selected
                     fill-input
@@ -17,8 +17,8 @@
                     emit-value
                     map-options
                     input-debounce="0"
-                    :options="options.prodcutos"
-                    @filter="filterProductos"
+                    :options="options.grupos"
+                    @filter="filterGrupos"
                   >
                     <template v-slot:no-option>
                       <q-item>
@@ -30,7 +30,7 @@
                   </q-select>
               </div>
               <div class="col-3">
-                <q-input type="number" v-model="temp.cantidad" label="Nombre de producto"/>
+                <q-input type="text" v-model="storeItems.nombre" label="Nombre de producto"/>
               </div>
               <div class="col-2">
                 <q-btn color="primary" v-on:click="globalValidate('guardar')" label="Guardar" />
@@ -40,7 +40,7 @@
               <div class="col-6">
                 <q-table
                     title="Productos"
-                    :data="datos.productosRes"
+                    :data="tableData"
                     :columns="columnsProductos"
                     :separator="separator"
                     row-key="id"
@@ -64,28 +64,23 @@ export default {
   name: 'PageSalMercancia',
   data () {
     return {
-      urlAPI: 'api/despachos/crearporlote',
+      urlAPI: 'api/generales/productos',
+      tableData: [],
       storeItems: {
-        productos: []
-      },
-      datos: {
-        productosCerdo: [],
-        productosRed: []
-      },
-      temp: {
-        producto: null,
-        unidades: null,
-        cantidad: null
+        nombre: null,
+        grupo_id: null
       },
       options: {
-        productos: [],
-        unidades: []
+        grupos: this.grupos
       },
+      grupos: [],
       columnsProductos: [
         { name: 'id', required: true, label: 'id', align: 'left', field: 'id', sortable: true, classes: 'my-class', style: 'width: 200px' },
-        { name: 'nombre', required: true, label: 'Nombre', align: 'left', field: 'nombre_producto', sortable: true, classes: 'my-class', style: 'width: 200px' },
+        { name: 'nombre', required: true, label: 'Nombre', align: 'left', field: 'nombre', sortable: true, classes: 'my-class', style: 'width: 200px' },
+        { name: 'grupo', required: true, label: 'Grupo', align: 'left', field: 'grupo', sortable: true, classes: 'my-class', style: 'width: 200px' },
         { name: 'actions', required: true, label: 'Acciones', align: 'left', field: 'id', sortable: true, classes: 'my-class', style: 'width: 200px' }
-      ]
+      ],
+      separator: 'horizontal'
     }
   },
   mixins: [globalFunctions],
@@ -93,7 +88,19 @@ export default {
     preSave () {
     },
     postSave () {
+    },
+    filterGrupos (val, update, abort) {
+      update(() => {
+        const needle = val.toLowerCase()
+        this.options.grupos = this.grupos.filter(v => v.nombre.toLowerCase().indexOf(needle) > -1)
+      })
     }
+  },
+  created: function () {
+    this.globalGetItems()
+    this.globalGetForSelect('api/generales/grupos').then(v => {
+      this.grupos = v
+    })
   }
 }
 </script>
