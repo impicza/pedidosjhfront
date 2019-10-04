@@ -3,17 +3,19 @@ const routes = [
   {
     path: '/',
     component: () => import('layouts/MyLayout.vue'),
+    meta: {
+      auth: true
+    },
     children: [
-      { path: '', name: 'home', component: () => import('pages/Index.vue') },
-      { path: '/login', name: 'login', component: () => import('pages/Login.vue') }
+      { path: '', name: 'home', component: () => import('pages/Index.vue') }
     ]
   },
   {
     path: '/pedidos',
     component: () => import('layouts/MyLayout.vue'),
-    // meta: {
-    //   auth: true
-    // },
+    meta: {
+      auth: true
+    },
     children: [
       { path: '', component: () => import('pages/pedidos/crearPedido.vue') }
     ]
@@ -21,14 +23,30 @@ const routes = [
   {
     path: '/generales',
     component: () => import('layouts/MyLayout.vue'),
-    // meta: {
-    //   auth: true
-    // },
+    meta: {
+      auth: true
+    },
     children: [
       { path: 'productos', component: () => import('pages/generales/productos.vue') },
       { path: 'grupos', component: () => import('pages/generales/grupos.vue') },
       { path: 'unidades', component: () => import('pages/generales/unidades.vue') }
     ]
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import('pages/Register.vue'),
+    meta: {
+      auth: true
+    }
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('pages/Login.vue'),
+    meta: {
+      auth: false
+    }
   }
 ]
 

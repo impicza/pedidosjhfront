@@ -25,7 +25,7 @@
           </div>
         </q-expansion-item>
         <li v-if="$auth.check()">
-            <a href="#" @click.prevent="$auth.logout()">Logout</a>
+            <a href="./" @click.prevent="$auth.logout(), $router.push({ name: 'login' })">Logout</a>
         </li>
         <li v-if="$auth.check()">
             {{ $auth.user().name }}

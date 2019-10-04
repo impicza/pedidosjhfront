@@ -187,6 +187,15 @@ export default {
     }
   },
   created: function () {
+    this.$auth.refresh({
+      params: {}, // data: {} in Axios
+      success: function () {
+        console.log('success')
+      },
+      error: function () {
+        console.log('error')
+      }
+    })
     this.globalGetForSelect('api/generales/unidades').then(v => {
       this.unidades = v
     })

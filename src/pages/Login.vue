@@ -1,10 +1,10 @@
 <template>
     <div class="container">
         <div class="card card-default">
-            <div class="card-header">Connexion</div>
+            <div class="card-header">Conectar</div>
             <div class="card-body">
                 <div class="alert alert-danger" v-if="has_error">
-                    <p>Erreur, impossible de se connecter avec ces identifiants.</p>
+                    <p>Error, Imposible conectar con estas credenciales.</p>
                 </div>
                 <form autocomplete="off" @submit.prevent="login" method="post">
                     <div class="form-group">
@@ -46,7 +46,8 @@ export default {
           this.$router.push({ name: 'home' })
         },
         error: function () {
-          app.has_error = true
+          this.has_error = true
+          console.log('error')
         },
         rememberMe: true,
         fetchUser: true
