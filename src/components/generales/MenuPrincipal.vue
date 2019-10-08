@@ -9,6 +9,7 @@
         >
           <div class="expansion-items">
             <router-link to="/pedidos" class="menuItem">Crear Pedido</router-link>
+            <router-link to="/pedidos/listapedidos" class="menuItem">Ver Pedidos</router-link>
           </div>
         </q-expansion-item>
         <q-expansion-item

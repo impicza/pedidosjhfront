@@ -38,8 +38,6 @@
                     option-label="nombre"
                     label="Unidades"
                     option-disable="inactive"
-                    emit-value
-                    map-options
                     input-debounce="0"
                     :options="options.unidades"
                     @filter="filterUnidades"
@@ -60,7 +58,8 @@
                 <q-btn color="positive" v-on:click="addProducto()" label="Agregar" />
               </div>
               <div class="col-2">
-                <q-btn color="primary" v-on:click="globalValidate('guardar')" label="Guardar" />
+                <q-btn v-if="!showForUpdate" color="primary" v-on:click="globalValidate('guardar')" label="Guardar" />
+                <q-btn v-if="showForUpdate" color="primary" v-on:click="globalValidate('guardar-edicion', storeItems.id)" label="Guardar Edición" />
               </div>
             </div>
             <div class="row q-col-gutter-md q-mt-md">
@@ -70,12 +69,32 @@
                     :data="datos.productosCerdo"
                     :columns="columnsProductos"
                     :separator="separator"
+                    :filter="filterTableCerdo"
                     row-key="id"
                     color="secondary"
                     table-style="width:100%"
                 >
+                  <template slot="top-right" slot-scope="props">
+                    <q-input
+                        hide-underline
+                        color="secondary"
+                        v-model="filterTableCerdo"
+                        class="col-6"
+                        debounce="500"
+                    >
+                      <template v-slot:append>
+                        <q-icon name="search" />
+                      </template>
+                    </q-input>
+                    <q-btn
+                        flat round dense
+                        :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                        @click="props.toggleFullscreen"
+                    />
+                  </template>
+
                     <q-td slot="body-cell-actions" slot-scope="props" :props="props">
-                        <q-btn icon="delete" v-on:click="eliminarFila('canal', props.value)" color="negative"></q-btn>
+                        <q-btn icon="delete" v-on:click="eliminarFila('productosCerdo',props.value)" color="negative"></q-btn>
                     </q-td>
                 </q-table>
               </div>
@@ -85,28 +104,91 @@
                     :data="datos.productosRes"
                     :columns="columnsProductos"
                     :separator="separator"
+                    :filter="filterTableRes"
                     row-key="id"
                     color="secondary"
                     table-style="width:100%"
                 >
+                    <template slot="top-right" slot-scope="props">
+                      <q-input
+                          hide-underline
+                          color="secondary"
+                          v-model="filterTableRes"
+                          class="col-6"
+                          debounce="500"
+                      >
+                        <template v-slot:append>
+                          <q-icon name="search" />
+                        </template>
+                      </q-input>
+                      <q-btn
+                          flat round dense
+                          :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                          @click="props.toggleFullscreen"
+                      />
+                  </template>
+
                     <q-td slot="body-cell-actions" slot-scope="props" :props="props">
-                        <q-btn icon="delete" v-on:click="eliminarFila('canal', props.value)" color="negative"></q-btn>
+                        <q-btn icon="delete" v-on:click="eliminarFila('productosRes',props.value)" color="negative"></q-btn>
                     </q-td>
                 </q-table>
               </div>
             </div>
+            <div class="row q-mt-xl">
+              <q-table
+                  title= "Mis pedidos"
+                  :data="tableData"
+                  :columns="columnsPedidos"
+                  :filter="filter"
+                  :visible-columns="visibleColumns"
+                  :separator="separator"
+                  row-key="id"
+                  color="secondary"
+                  table-style="width:100%"
+              >
+                  <template slot="top-right" slot-scope="props">
+                      <q-input
+                          hide-underline
+                          color="secondary"
+                          v-model="filter"
+                          class="col-6"
+                          debounce="500"
+                      >
+                        <template v-slot:append>
+                          <q-icon name="search" />
+                        </template>
+                      </q-input>
+                      <q-btn
+                          flat round dense
+                          :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                          @click="props.toggleFullscreen"
+                      />
+                  </template>
+
+                  <q-td slot="body-cell-estado" slot-scope="props" :props="props">
+                      <span v-if="props.value === 1">Creado</span>
+                      <span v-if="props.value === 0">Recibido</span>
+                  </q-td>
+
+                  <q-td slot="body-cell-actions" slot-scope="props" :props="props">
+                      <q-btn class="q-ml-xs" icon="edit" v-on:click="globalValidate('editar', props.value)" color="warning"></q-btn>
+                  </q-td>
+              </q-table>
+          </div>
         </q-page>
     </div>
 </template>
 
 <script>
+
 import { globalFunctions } from 'boot/mixins.js'
 
 export default {
   name: 'PageSalMercancia',
   data () {
     return {
-      urlAPI: 'api/despachos/crearporlote',
+      urlAPI: 'api/pedidos/items',
+      showForUpdate: false,
       productos: [],
       unidades: [],
       storeItems: {
@@ -121,6 +203,7 @@ export default {
         unidades: null,
         cantidad: null
       },
+      tableData: [],
       options: {
         productos: this.productos,
         unidades: this.unidades
@@ -131,12 +214,23 @@ export default {
         { name: 'cantidad', required: true, label: 'Cantidad', align: 'left', field: 'cantidad', sortable: true, classes: 'my-class', style: 'width: 200px' },
         { name: 'actions', required: true, label: 'Acciones', align: 'left', field: 'id', sortable: true, classes: 'my-class', style: 'width: 200px' }
       ],
-      separator: 'horizontal'
+      separator: 'horizontal',
+      columnsPedidos: [
+        { name: 'id', required: true, label: 'id', align: 'left', field: 'id', sortable: true, classes: 'my-class', style: 'width: 200px' },
+        { name: 'created_at', required: true, label: 'Fecha de creación', align: 'left', field: 'created_at', sortable: true, classes: 'my-class', style: 'width: 200px' },
+        { name: 'estado', required: true, label: 'Estado', align: 'left', field: 'estado', sortable: true, classes: 'my-class', style: 'width: 200px' },
+        { name: 'actions', required: true, label: 'Acciones', align: 'left', field: 'id', sortable: true, classes: 'my-class', style: 'width: 200px' }
+      ],
+      visibleColumns: ['id', 'nombre', 'actions'],
+      filter: '',
+      filterTableCerdo: '',
+      filterTableRes: ''
     }
   },
   mixins: [globalFunctions],
   methods: {
     preSave () {
+      this.storeItems.user_id = this.$auth.user().id
       this.datos.productosCerdo.forEach((item) => {
         this.storeItems.productos.push(item)
       })
@@ -145,6 +239,18 @@ export default {
       })
     },
     postSave () {
+      this.datos = {
+        productosCerdo: [],
+        productosRes: []
+      }
+      this.globalGetForSelect('api/pedidos/listadoporcliente/' + this.$auth.user().id).then(v => {
+        this.tableData = v
+      })
+    },
+    postEdit () {
+      this.datos.productosCerdo = this.storeItems.productosCerdo
+      this.datos.productosRes = this.storeItems.productosRes
+      this.storeItems.productos = []
     },
     filterProductos (val, update, abort) {
       update(() => {
@@ -158,20 +264,24 @@ export default {
         this.options.unidades = this.unidades.filter(v => v.nombre.toLowerCase().indexOf(needle) > -1)
       })
     },
+    eliminarFila (grupo, id) {
+      console.log(id)
+      var index = null
+      this.datos[grupo].forEach(function (element, i) {
+        if (id === element.id) {
+          index = i
+        }
+      })
+      this.datos[grupo].splice(index, 1)
+    },
     addProducto () {
-      if (this.temp.producto.grupo === 'Cerdo') {
-        this.datos.productosCerdo.push({
-          id: 'nuevo' + parseInt(this.datos.productosCerdo.length),
-          producto_id: this.temp.producto.id,
-          producto_nombre: this.temp.producto.nombre,
-          cantidad: this.temp.cantidad,
-          unidad_id: this.temp.unidades.id,
-          unidad_nombre: this.temp.unidades.nombre
-        })
-      }
-      if (this.temp.producto.grupo === 'Res') {
-        this.datos.productosRes.push({
-          id: 'nuevo' + parseInt(this.datos.productosRes.length),
+      var grupoDestino = 'productos' + this.temp.producto.grupo
+      var listValidate = this.datos[grupoDestino].filter(v => v.producto_nombre.indexOf(this.temp.producto.nombre) > -1)
+      if (listValidate.length > 0) {
+        this.$q.notify({ color: 'negative', message: 'Este producto ya fue agregado, verifique cantidad!' })
+      } else {
+        this.datos[grupoDestino].push({
+          id: 'nuevo' + parseInt(this.datos[grupoDestino].length),
           producto_id: this.temp.producto.id,
           producto_nombre: this.temp.producto.nombre,
           cantidad: this.temp.cantidad,
@@ -195,6 +305,9 @@ export default {
       error: function () {
         console.log('error')
       }
+    })
+    this.globalGetForSelect('api/pedidos/listadoporcliente/' + this.$auth.user().id).then(v => {
+      this.tableData = v
     })
     this.globalGetForSelect('api/generales/unidades').then(v => {
       this.unidades = v

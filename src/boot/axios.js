@@ -25,16 +25,16 @@ export default ({ Vue }) => {
   Vue.axios.defaults.baseURL = 'http://pedidosjh.test/api'
   // Vue.axios.defaults.baseURL = 'http://192.168.1.82/jhsoft/public/'
 
-  Vue.axios.interceptors.response.use(function (response) {
-    if (response.data.error === 'Unauthorized') {
-      localStorage.removeItem('default_auth_token')
-      document.location.reload()
-    }
-    return response
-  }, function (error) {
-    if (error.response.status === 401) {
-      console.log('tokenExpired')
-      Vue.auth.refresh()
-    }
-  })
+  // Vue.axios.interceptors.response.use(function (response) {
+  //   if (response.data.error === 'Unauthorized') {
+  //     localStorage.removeItem('default_auth_token')
+  //     document.location.reload()
+  //   }
+  //   return response
+  // }, function (error) {
+  //   if (error.response.status === 401) {
+  //     console.log('tokenExpired')
+  //     Vue.auth.refresh()
+  //   }
+  // })
 }

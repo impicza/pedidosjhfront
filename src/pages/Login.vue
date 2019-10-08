@@ -1,24 +1,29 @@
 <template>
     <div class="container">
-        <div class="card card-default">
-            <div class="card-header">Conectar</div>
-            <div class="card-body">
-                <div class="alert alert-danger" v-if="has_error">
-                    <p>Error, Imposible conectar con estas credenciales.</p>
-                </div>
-                <form autocomplete="off" @submit.prevent="login" method="post">
-                    <div class="form-group">
-                        <label for="email">E-mail</label>
-                        <input type="email" id="email" class="form-control" placeholder="user@example.com" v-model="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Mot de passe</label>
-                        <input type="password" id="password" class="form-control" v-model="password" required>
-                    </div>
-                    <button type="submit" class="btn btn-default">Connexion</button>
-                </form>
+      <div class="column q-pa-md row items-center q-gutter-md">
+        <q-card class="my-card">
+          <q-card-section>
+            <div>
+              <img id="logo" alt="Quasar logo" src="~assets/logo-supercarnes.png">
+              <h3 class="titulo-login">Pedidos JH</h3>
             </div>
-        </div>
+            <div class="alert alert-danger" v-if="has_error">
+                <p style="color: red">Error, Imposible conectar con estas credenciales.</p>
+            </div>
+            <form autocomplete="off" @submit.prevent="login" method="post">
+                <div class="form-group">
+                    <q-input type="text" required v-model="email" label="E-mail"/>
+                </div>
+                <div class="form-group">
+                    <q-input type="password" required v-model="password" label="Contraseña"/>
+                </div>
+                <div class="q-mt-sm">
+                  <q-btn type="submit" color="primary" label="Guardar" />
+                </div>
+            </form>
+          </q-card-section>
+        </q-card>
+      </div>
     </div>
 </template>
 <script>
@@ -35,19 +40,22 @@ export default {
   },
   methods: {
     login () {
-    // get the redirect object
+      this.has_error = false
+      this.$q.loading.show()
+      // get the redirect object
       var app = this
       this.$auth.login({
         params: {
-          email: app.email,
+          email: app.email + '@test.com',
           password: app.password
         },
         success: function () {
+          this.$q.loading.hide()
           this.$router.push({ name: 'home' })
         },
         error: function () {
+          this.$q.loading.hide()
           this.has_error = true
-          console.log('error')
         },
         rememberMe: true,
         fetchUser: true
@@ -56,3 +64,18 @@ export default {
   }
 }
 </script>
+
+<style lang="stylus" scoped>
+  .my-card {
+    width: 100%
+    max-width: 500px
+  }
+  .titulo-login {
+    padding: 0px
+    margin 0px
+    text-align: center
+  }
+  #logo {
+    width:100%
+  }
+</style>

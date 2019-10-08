@@ -17,7 +17,8 @@ const routes = [
       auth: true
     },
     children: [
-      { path: '', component: () => import('pages/pedidos/crearPedido.vue') }
+      { path: '', component: () => import('pages/pedidos/crearPedido.vue') },
+      { path: 'listapedidos', component: () => import('pages/pedidos/listaPedidos.vue') }
     ]
   },
   {
