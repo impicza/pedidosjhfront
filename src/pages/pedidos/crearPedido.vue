@@ -238,14 +238,19 @@ export default {
         this.storeItems.productos.push(item)
       })
     },
-    postSave () {
+    async postSave () {
       this.datos = {
         productosCerdo: [],
         productosRes: []
       }
       this.globalGetForSelect('api/pedidos/listadoporcliente/' + this.$auth.user().id).then(v => {
+        console.log(v)
         this.tableData = v
+        console.log(this.tableData)
       })
+      this.storeItems = {
+        productos: []
+      }
     },
     postEdit () {
       this.datos.productosCerdo = this.storeItems.productosCerdo
@@ -297,15 +302,6 @@ export default {
     }
   },
   created: function () {
-    this.$auth.refresh({
-      params: {}, // data: {} in Axios
-      success: function () {
-        console.log('success')
-      },
-      error: function () {
-        console.log('error')
-      }
-    })
     this.globalGetForSelect('api/pedidos/listadoporcliente/' + this.$auth.user().id).then(v => {
       this.tableData = v
     })

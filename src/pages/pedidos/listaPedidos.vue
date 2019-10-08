@@ -38,8 +38,10 @@
                 </q-td>
 
                 <q-td slot="body-cell-actions" slot-scope="props" :props="props">
-                    <a target="_blank" :href="$store.state.pedidosjh.url+'api/pedidos/imprimirpedido/'+ props.value + '?token='+ $auth.token()"><q-btn class="q-ml-xs" icon="assignment" color="primary"></q-btn> </a>
-                    <q-btn class="q-ml-xs" icon="check_circle" v-on:click="prueba(props.value)" color="positive"></q-btn>
+                    <a target="_blank" :href="$store.state.pedidosjh.url+'api/pedidos/imprimirpedido/'+ props.value + '?token='+ $auth.token()">
+                        <q-btn class="q-ml-xs" @click="reload" icon="assignment" color="primary">
+                        </q-btn>
+                    </a>
                 </q-td>
             </q-table>
         </div>
@@ -89,6 +91,11 @@ export default {
       } finally {
         this.globalGetItems()
       }
+    },
+    reload () {
+      this.globalGetForSelect('api/pedidos/listadocompleto').then(v => {
+        this.tableData = v
+      })
     }
   },
   created: function () {

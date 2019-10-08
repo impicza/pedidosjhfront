@@ -46,7 +46,7 @@ export default {
       var app = this
       this.$auth.login({
         params: {
-          email: app.email + '@test.com',
+          email: app.email + '@pedidosjh.com',
           password: app.password
         },
         success: function () {

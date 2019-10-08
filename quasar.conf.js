@@ -69,7 +69,8 @@ module.exports = function (ctx) {
         'QPopupProxy',
         'QRadio',
         'QSeparator',
-        'QItemSection'
+        'QItemSection',
+        'QToggle'
       ],
       directives: [
         'Ripple',

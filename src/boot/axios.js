@@ -15,13 +15,12 @@ export default ({ Vue }) => {
       }
     },
     http: require('@websanova/vue-auth/drivers/http/axios.1.x.js'),
-    router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js')
+    router: require('@websanova/vue-auth/drivers/router/vue-router.2.x.js'),
+    notFoundRedirect: false,
+    rolesVar: 'role',
+    registerData: { url: 'auth/register', method: 'POST', redirect: '/' },
+    refreshData: { url: 'auth/refresh', method: 'GET', enabled: true, interval: 5 }
   })
-  // Vue.use(require('@websanova/vue-auth'), {
-  //   parseUserData: function (data) {
-  //     return data.whatever
-  //   }
-  // })
   Vue.axios.defaults.baseURL = 'http://pedidosjh.test/api'
   // Vue.axios.defaults.baseURL = 'http://192.168.1.82/jhsoft/public/'
 

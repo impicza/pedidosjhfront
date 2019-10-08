@@ -1,66 +1,163 @@
 <template>
-    <div class="container">
-        <div class="card card-default">
-            <div class="card-header">Inscripcion</div>
-            <div class="card-body">
-                <div class="alert alert-danger" v-if="has_error && !success">
-                    <p v-if="error == 'registration_validation_error'">Erreur(s) de validation, veuillez consulter le(s) message(s) ci-dessous.</p>
-                    <p v-else>Erreur, impossible de s'inscrire pour le moment. Si le problème persiste, veuillez contacter un administrateur.</p>
-                </div>
-                <form autocomplete="off" @submit.prevent="register" v-if="!success" method="post">
-                    <div class="form-group" v-bind:class="{ 'has-error': has_error && errors.name }">
-                        <label for="name">Nombre</label>
-                        <input type="text" id="name" class="form-control" placeholder="user@example.com" v-model="name">
+    <div>
+        <q-page padding>
+            <h3>Usuarios</h3>
+              <div class="alert alert-danger" v-if="has_error && !success">
+                  <p v-if="error == 'registration_validation_error'">Erreur(s) de validation, veuillez consulter le(s) message(s) ci-dessous.</p>
+                  <p v-else>Erreur, impossible de s'inscrire pour le moment. Si le problème persiste, veuillez contacter un administrateur.</p>
+              </div>
+            <div class="row q-col-gutter-md">
+                  <form  class="col-6" autocomplete="off" @submit.prevent="register" v-if="!success" method="post">
+                    <div class="form-group col-6" v-bind:class="{ 'has-error': has_error && errors.name }">
+                        <q-input type="text" required v-model="name" label="Nombre"/>
                         <span class="help-block" v-if="has_error && errors.name">{{ errors.name }}</span>
                     </div>
-                    <div class="form-group" v-bind:class="{ 'has-error': has_error && errors.email }">
-                        <label for="email">E-mail</label>
-                        <input type="email" id="email" class="form-control" placeholder="user@example.com" v-model="email">
-                        <span class="help-block" v-if="has_error && errors.email">{{ errors.email }}</span>
-                    </div>
                     <div class="form-group" v-bind:class="{ 'has-error': has_error && errors.password }">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" class="form-control" v-model="password">
+                        <q-input type="password" required v-model="password" label="Contraseña"/>
                         <span class="help-block" v-if="has_error && errors.password">{{ errors.password }}</span>
                     </div>
                     <div class="form-group" v-bind:class="{ 'has-error': has_error && errors.password }">
-                        <label for="password_confirmation">Confirmacion de password</label>
-                        <input type="password" id="password_confirmation" class="form-control" v-model="password_confirmation">
+                        <q-input type="password" required v-model="password_confirmation" label="Confirmar Contraseña"/>
                     </div>
-                    <button type="submit" class="btn btn-default">Inscribir</button>
+                    <div class="form-group">
+                        <q-select
+                            filled
+                            v-model="dias_despacho"
+                            :options="optionsDias"
+                            label="Días de despacho"
+                            multiple
+                            emit-value
+                            map-options
+                        >
+                          <template v-slot:option="scope">
+                            <q-item
+                              v-bind="scope.itemProps"
+                              v-on="scope.itemEvents"
+                            >
+                              <q-item-section>
+                                <q-item-label v-html="scope.opt.label" ></q-item-label>
+                              </q-item-section>
+                              <q-item-section side>
+                                <q-toggle v-model="dias_despacho" :val="scope.opt.value" />
+                              </q-item-section>
+                            </q-item>
+                          </template>
+                        </q-select>
+                    </div>
+                    <div class="q-mt-sm">
+                      <q-btn type="submit" color="primary" label="inscribir" />
+                    </div>
                 </form>
             </div>
-        </div>
+            <div class="row q-col-gutter-md q-mt-md">
+              <div class="col-6">
+                <q-table
+                    title="Productos"
+                    :data="tableData"
+                    :columns="columnsProductos"
+                    :separator="separator"
+                    :filter="filter"
+                    row-key="id"
+                    color="secondary"
+                    table-style="width:100%"
+                >
+                  <template slot="top-right" slot-scope="props">
+                      <q-input
+                          hide-underline
+                          color="secondary"
+                          v-model="filter"
+                          class="col-6"
+                          debounce="500"
+                      >
+                        <template v-slot:append>
+                          <q-icon name="search" />
+                        </template>
+                      </q-input>
+                      <q-btn
+                          flat round dense
+                          :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                          @click="props.toggleFullscreen"
+                      />
+                  </template>
+                </q-table>
+              </div>
+            </div>
+        </q-page>
     </div>
 </template>
+
 <script>
+import { globalFunctions } from 'boot/mixins.js'
 
 export default {
+  name: 'PageSalMercancia',
   data () {
     return {
+      urlAPI: 'api/users',
+      tableData: [],
       name: '',
       email: '',
       password: '',
       password_confirmation: '',
+      dias_despacho: [],
       has_error: false,
       error: '',
       errors: {},
-      success: false
+      success: false,
+      options: {
+        grupos: this.grupos
+      },
+      grupos: [],
+      columnsProductos: [
+        { name: 'id', required: true, label: 'id', align: 'left', field: 'id', sortable: true, classes: 'my-class', style: 'width: 200px' },
+        { name: 'nombre', required: true, label: 'Nombre', align: 'left', field: 'name', sortable: true, classes: 'my-class', style: 'width: 200px' },
+        { name: 'dias_despacho', required: true, label: 'Dias despacho', align: 'left', field: 'dias_despacho', sortable: true, classes: 'my-class', style: 'width: 200px' }
+      ],
+      separator: 'horizontal',
+      filter: '',
+      optionsDias: [
+        {
+          label: 'Lunes',
+          value: 1
+        },
+        {
+          label: 'Martes',
+          value: 2
+        },
+        {
+          label: 'Miércoles',
+          value: 3
+        },
+        {
+          label: 'Jueves',
+          value: 4
+        },
+        {
+          label: 'Viernes',
+          value: 5
+        },
+        {
+          label: 'Sabado',
+          value: 6
+        }
+      ]
     }
   },
+  mixins: [globalFunctions],
   methods: {
     register () {
       var app = this
       this.$auth.register({
         data: {
           name: app.name,
-          email: app.email,
+          email: app.name + '@pedidosjh.com',
           password: app.password,
-          password_confirmation: app.password_confirmation
+          password_confirmation: app.password_confirmation,
+          dias_despacho: app.dias_despacho
         },
         success: function () {
           app.success = true
-          this.$router.push({ name: 'login', params: { successRegistrationRedirect: true } })
+          this.$router.push({ name: 'home' })
         },
         error: function (res) {
           console.log(res.response.data.errors)
@@ -70,6 +167,36 @@ export default {
         }
       })
     }
+  },
+  created: function () {
+    this.globalGetForSelect('api/users').then(v => {
+      this.tableData = v.users
+    })
   }
 }
 </script>
+
+<style scoped>
+  .my-card{
+    width: 100%;
+    max-width: 250px;
+    cursor:pointer}
+  .my-card:hover{
+    background-color:greenyellow
+  }
+  .my-card-prog{
+    cursor: pointer;
+  }
+  .my-card-prog:hover{
+    background-color: aqua;
+  }
+  h5{
+    width: 100%;
+    margin: 5px;
+  }
+
+  .col-lotes {
+    max-height: 600px;
+    overflow-y: scroll;
+  }
+</style>
