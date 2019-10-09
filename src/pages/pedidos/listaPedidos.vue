@@ -33,8 +33,16 @@
                 </template>
 
                 <q-td slot="body-cell-estado" slot-scope="props" :props="props">
-                    <span v-if="props.value === 1">Creado</span>
-                    <span v-if="props.value === 0">Recibido</span>
+                    <span v-if="props.value === 1">
+                      <q-badge color="negative" multi-line>
+                        Creado
+                      </q-badge>
+                    </span>
+                    <span v-if="props.value === 0">
+                      <q-badge color="positive" multi-line>
+                        Recibido
+                      </q-badge>
+                    </span>
                 </q-td>
 
                 <q-td slot="body-cell-actions" slot-scope="props" :props="props">
@@ -51,7 +59,6 @@
 
 <script>
 import { globalFunctions } from 'boot/mixins.js'
-const axios = require('axios')
 
 export default {
   name: 'CreateTipoAlmacen',
@@ -83,25 +90,12 @@ export default {
     },
     postEdit () {
     },
-    async prueba (id) {
-      try {
-        await axios.get(this.$store.state.pedidosjh.url + 'api/pedidos/imprimirpedido/' + id)
-      } catch (error) {
-        this.$q.notify({ color: 'negative', message: 'Hubo un error no se pudo ' })
-      } finally {
-        this.globalGetItems()
-      }
-    },
     reload () {
-      this.globalGetForSelect('api/pedidos/listadocompleto').then(v => {
-        this.tableData = v
-      })
+      this.globalGetForSelect('api/pedidos/listadocompleto', 'tableData')
     }
   },
   created: function () {
-    this.globalGetForSelect('api/pedidos/listadocompleto').then(v => {
-      this.tableData = v
-    })
+    this.globalGetForSelect('api/pedidos/listadocompleto', 'tableData')
   },
   computed: {
   }

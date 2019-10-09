@@ -29,7 +29,7 @@
         <q-expansion-item
           v-if="$auth.user().role === 2"
           expand-separator
-          icon="explore"
+          icon="people"
           label="Usuarios"
           class="expansion-block"
           expand-icon-class="text-white"
@@ -38,12 +38,16 @@
             <router-link to="/register" class="menuItem">Ver/Crear Usuarios</router-link>
           </div>
         </q-expansion-item>
-        <li v-if="$auth.check()">
-            <a href="./" @click.prevent="$auth.logout(), $router.push({ name: 'login' })">Logout</a>
-        </li>
-        <li v-if="$auth.check()">
-            {{ $auth.user().name }}
-        </li>
+        <div class="q-mt-md row">
+          <div v-if="$auth.check()" class="text-center col-12">
+              Usuario: {{ $auth.user().name }}
+          </div>
+        </div>
+        <div class="row q-mt-sm">
+          <div v-if="$auth.check()" class="text-center col-12">
+            <a href="./" @click.prevent="$auth.logout(), $router.push({ name: 'login' })"><q-btn color="negative">Salir</q-btn></a>
+          </div>
+        </div>
       </q-list>
 </template>
 

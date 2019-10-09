@@ -98,9 +98,7 @@ export default {
   },
   created: function () {
     this.globalGetItems()
-    this.globalGetForSelect('api/generales/grupos').then(v => {
-      this.grupos = v
-    })
+    this.globalGetForSelect('api/generales/grupos', 'grupos')
   }
 }
 </script>

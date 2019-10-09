@@ -175,25 +175,24 @@ export const globalFunctions = {
       }
       this.postSave()
     },
-    async globalGetForSelect (url) {
+    globalGetForSelect (url, objeto, objUpdate) {
       this.$q.loading.show()
-      var list
-      try {
-        let data = await axios.get(this.$store.state.pedidosjh.url + url)
-        // var response = data.data
-        // response.forEach(element => {
-        //   element.value = element.id
-        //   element.label = element[fieldLabel]
-        //   if (stamp === true) {
-        //     element.stamp = element[stampLabel]
-        //     console.log('hola')
-        //   }
-        // })
-        list = await data.data
-      } finally {
-        this.$q.loading.hide()
-        return list
+      var app = this
+      if (app[objUpdate]) {
+        app[objUpdate] = false
       }
+      axios.get(this.$store.state.pedidosjh.url + url).then(
+        function (response) {
+          app[objeto] = response.data
+        }
+      ).catch(function (error) {
+        console.log(error)
+      }).finally(function () {
+        app.$q.loading.hide()
+        if (!app[objUpdate]) {
+          app[objUpdate] = true
+        }
+      })
     },
     globalFormatPeso (value) {
       let val = parseFloat(value).toFixed(3)

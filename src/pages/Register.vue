@@ -88,6 +88,7 @@
 
 <script>
 import { globalFunctions } from 'boot/mixins.js'
+const axios = require('axios')
 
 export default {
   name: 'PageSalMercancia',
@@ -169,8 +170,16 @@ export default {
     }
   },
   created: function () {
-    this.globalGetForSelect('api/users').then(v => {
-      this.tableData = v.users
+    var app = this
+    app.$q.loading.show()
+    axios.get(this.$store.state.pedidosjh.url + 'api/users').then(
+      function (response) {
+        app.tableData = response.data.users
+      }
+    ).catch(function (error) {
+      console.log(error)
+    }).finally(function () {
+      app.$q.loading.hide()
     })
   }
 }

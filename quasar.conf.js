@@ -70,7 +70,8 @@ module.exports = function (ctx) {
         'QRadio',
         'QSeparator',
         'QItemSection',
-        'QToggle'
+        'QToggle',
+        'QBadge'
       ],
       directives: [
         'Ripple',

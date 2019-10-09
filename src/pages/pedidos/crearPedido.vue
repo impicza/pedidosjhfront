@@ -136,6 +136,7 @@
             </div>
             <div class="row q-mt-xl">
               <q-table
+                  v-if="tableVisible"
                   title= "Mis pedidos"
                   :data="tableData"
                   :columns="columnsPedidos"
@@ -224,7 +225,8 @@ export default {
       visibleColumns: ['id', 'nombre', 'actions'],
       filter: '',
       filterTableCerdo: '',
-      filterTableRes: ''
+      filterTableRes: '',
+      tableVisible: true
     }
   },
   mixins: [globalFunctions],
@@ -238,16 +240,12 @@ export default {
         this.storeItems.productos.push(item)
       })
     },
-    async postSave () {
+    postSave () {
       this.datos = {
         productosCerdo: [],
         productosRes: []
       }
-      this.globalGetForSelect('api/pedidos/listadoporcliente/' + this.$auth.user().id).then(v => {
-        console.log(v)
-        this.tableData = v
-        console.log(this.tableData)
-      })
+      this.globalGetForSelect('api/pedidos/listadoporcliente/' + this.$auth.user().id, 'tableData', 'tableVisible')
       this.storeItems = {
         productos: []
       }
@@ -302,15 +300,9 @@ export default {
     }
   },
   created: function () {
-    this.globalGetForSelect('api/pedidos/listadoporcliente/' + this.$auth.user().id).then(v => {
-      this.tableData = v
-    })
-    this.globalGetForSelect('api/generales/unidades').then(v => {
-      this.unidades = v
-    })
-    this.globalGetForSelect('api/generales/productos').then(v => {
-      this.productos = v
-    })
+    this.globalGetForSelect('api/pedidos/listadoporcliente/' + this.$auth.user().id, 'tableData')
+    this.globalGetForSelect('api/generales/unidades', 'unidades')
+    this.globalGetForSelect('api/generales/productos', 'productos')
   }
 }
 </script>
