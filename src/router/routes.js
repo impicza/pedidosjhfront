@@ -5,7 +5,8 @@ const routes = [
     component: () => import('layouts/MyLayout.vue'),
     children: [
       { path: '', name: 'home', component: () => import('pages/Index.vue'), meta: { auth: true } },
-      { path: 'register', name: 'register', component: () => import('pages/Register.vue'), meta: { auth: { roles: 2 } } }
+      { path: 'register', name: 'register', component: () => import('pages/Register.vue'), meta: { auth: { roles: 'admin' } } },
+      { path: 'changepass', name: 'changepass', component: () => import('pages/user/cambiarPass.vue'), meta: { auth: true } }
     ]
   },
   {
@@ -16,7 +17,7 @@ const routes = [
     },
     children: [
       { path: '', component: () => import('pages/pedidos/crearPedido.vue') },
-      { path: 'listapedidos', component: () => import('pages/pedidos/listaPedidos.vue'), meta: { auth: { roles: 2 } } }
+      { path: 'listapedidos', component: () => import('pages/pedidos/listaPedidos.vue'), meta: { auth: { roles: 'admin' } } }
     ]
   },
   {
@@ -24,7 +25,7 @@ const routes = [
     component: () => import('layouts/MyLayout.vue'),
     meta: {
       auth: {
-        roles: 2
+        roles: 'admin'
       }
     },
     children: [

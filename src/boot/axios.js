@@ -21,8 +21,8 @@ export default ({ Vue }) => {
     registerData: { url: 'auth/register', method: 'POST', redirect: '/' },
     refreshData: { url: 'auth/refresh', method: 'GET', enabled: true, interval: 5 }
   })
-  Vue.axios.defaults.baseURL = 'http://pedidosjh.test/api'
-  // Vue.axios.defaults.baseURL = 'http://192.168.1.82/jhsoft/public/'
+  // Vue.axios.defaults.baseURL = 'http://pedidosjh.test/api'
+  Vue.axios.defaults.baseURL = 'http://pedidosjh.milvariedades.co/back/api'
 
   // Vue.axios.interceptors.response.use(function (response) {
   //   if (response.data.error === 'Unauthorized') {

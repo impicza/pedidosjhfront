@@ -3,6 +3,7 @@
     <q-page padding>
         <div class="row q-mt-xl">
             <q-table
+                v-if = "tableDateVisible"
                 title = 'Pedidos JH'
                 :data="tableData"
                 :columns="columnsPedidos"
@@ -50,6 +51,7 @@
                         <q-btn class="q-ml-xs" @click="reload" icon="assignment" color="primary">
                         </q-btn>
                     </a>
+                    <q-btn v-if="validarEstado(props.value) == 0" class="q-ml-xs" icon="edit" v-on:click="reactivar(props.value)" color="warning"></q-btn>
                 </q-td>
             </q-table>
         </div>
@@ -59,11 +61,13 @@
 
 <script>
 import { globalFunctions } from 'boot/mixins.js'
+const axios = require('axios')
 
 export default {
   name: 'CreateTipoAlmacen',
   data: function () {
     return {
+      tableDateVisible: true,
       urlAPI: 'api/pedidos/items',
       storeItems: {
         nombre: null
@@ -91,7 +95,23 @@ export default {
     postEdit () {
     },
     reload () {
-      this.globalGetForSelect('api/pedidos/listadocompleto', 'tableData')
+      var app = this
+      this.$q.loading.show()
+      setTimeout(function () { app.globalGetForSelect('api/pedidos/listadocompleto', 'tableData') }, 500)
+    },
+    validarEstado (id) {
+      const item = this.tableData.find(item => item.id === id)
+      return item.estado
+    },
+    reactivar (id) {
+      var app = this
+      this.$q.loading.show()
+      axios.get(this.$store.state.pedidosjh.url + 'api/pedidos/estado/reactivar/' + id).then(
+        setTimeout(function () { app.globalGetForSelect('api/pedidos/listadocompleto', 'tableData') }, 500)
+      ).catch(function (error) {
+        console.log(error)
+      }).finally(function () {
+      })
     }
   },
   created: function () {

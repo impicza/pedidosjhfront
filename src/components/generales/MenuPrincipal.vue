@@ -9,11 +9,11 @@
         >
           <div class="expansion-items">
             <router-link to="/pedidos" class="menuItem">Crear Pedido</router-link>
-            <router-link v-if="$auth.user().role === 2" to="/pedidos/listapedidos" class="menuItem">Ver Pedidos</router-link>
+            <router-link v-if="$auth.user().role === 'admin'" to="/pedidos/listapedidos" class="menuItem">Ver Pedidos</router-link>
           </div>
         </q-expansion-item>
         <q-expansion-item
-          v-if="$auth.user().role === 2"
+          v-if="$auth.user().role === 'admin'"
           expand-separator
           icon="explore"
           label="Generales"
@@ -27,7 +27,6 @@
           </div>
         </q-expansion-item>
         <q-expansion-item
-          v-if="$auth.user().role === 2"
           expand-separator
           icon="people"
           label="Usuarios"
@@ -35,7 +34,8 @@
           expand-icon-class="text-white"
         >
           <div class="expansion-items">
-            <router-link to="/register" class="menuItem">Ver/Crear Usuarios</router-link>
+            <router-link v-if="$auth.user().role === 'admin'" to="/register" class="menuItem">Ver/Crear Usuarios</router-link>
+            <router-link to="/changepass" class="menuItem">Cambiar Contraseña</router-link>
           </div>
         </q-expansion-item>
         <div class="q-mt-md row">

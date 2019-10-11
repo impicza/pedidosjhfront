@@ -172,7 +172,11 @@
                   </q-td>
 
                   <q-td slot="body-cell-actions" slot-scope="props" :props="props">
-                      <q-btn class="q-ml-xs" icon="edit" v-on:click="globalValidate('editar', props.value)" color="warning"></q-btn>
+                      <q-btn v-if="validarEstado(props.value) == 1" class="q-ml-xs" icon="edit" v-on:click="globalValidate('editar', props.value)" color="warning"></q-btn>
+                      <a v-if="validarEstado(props.value) == 0" target="_blank" :href="$store.state.pedidosjh.url+'api/pedidos/imprimirpedidocliente/'+ props.value + '?token='+ $auth.token()">
+                        <q-btn class="q-ml-xs" @click="reload" icon="assignment" color="primary">
+                        </q-btn>
+                    </a>
                   </q-td>
               </q-table>
           </div>
@@ -297,12 +301,16 @@ export default {
         unidades: null,
         cantidad: null
       }
+    },
+    validarEstado (id) {
+      const item = this.tableData.find(item => item.id === id)
+      return item.estado
     }
   },
   created: function () {
     this.globalGetForSelect('api/pedidos/listadoporcliente/' + this.$auth.user().id, 'tableData')
-    this.globalGetForSelect('api/generales/unidades', 'unidades')
-    this.globalGetForSelect('api/generales/productos', 'productos')
+    this.globalGetForSelect('api/generales/unidades/estado/activos', 'unidades')
+    this.globalGetForSelect('api/generales/productos/estado/activos', 'productos')
   }
 }
 </script>
