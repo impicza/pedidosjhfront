@@ -167,8 +167,16 @@
                   </template>
 
                   <q-td slot="body-cell-estado" slot-scope="props" :props="props">
-                      <span v-if="props.value === 1">Creado</span>
-                      <span v-if="props.value === 0">Recibido</span>
+                      <span v-if="parseInt(props.value) === 1">
+                      <q-badge color="negative" multi-line>
+                        Creado
+                      </q-badge>
+                    </span>
+                    <span v-if="parseInt(props.value) === 0">
+                      <q-badge color="positive" multi-line>
+                        Recibido
+                      </q-badge>
+                    </span>
                   </q-td>
 
                   <q-td slot="body-cell-actions" slot-scope="props" :props="props">

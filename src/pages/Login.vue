@@ -18,7 +18,7 @@
                     <q-input type="password" required v-model="password" label="Contraseña"/>
                 </div>
                 <div class="q-mt-sm">
-                  <q-btn type="submit" color="primary" label="Guardar" />
+                  <q-btn type="submit" color="primary" label="Ingresar" />
                 </div>
             </form>
           </q-card-section>
@@ -77,5 +77,11 @@ export default {
   }
   #logo {
     width:100%
+  }
+
+  @media screen and (max-width: 600px) {
+    .q-card {
+      box-shadow: none;
+    }
   }
 </style>

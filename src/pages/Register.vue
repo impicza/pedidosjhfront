@@ -79,6 +79,12 @@
                           @click="props.toggleFullscreen"
                       />
                   </template>
+
+                  <q-td slot="body-cell-actions" slot-scope="props" :props="props">
+                    <q-btn v-if="goblalValidarEstado(parseInt(props.value)) == 0" class="q-ml-xs" icon="add_circle" v-on:click="editEstateItem('activar', props.value)" color="primary"></q-btn>
+                    <q-btn v-if="goblalValidarEstado(parseInt(props.value)) == 1" class="q-ml-xs" icon="remove_circle" v-on:click="editEstateItem('inactivar', props.value)" color="negative"></q-btn>
+                    <q-btn class="q-ml-xs" icon="cached" v-on:click="reinitPassword(props.value)" color="warning"></q-btn>
+                  </q-td>
                 </q-table>
               </div>
             </div>
@@ -112,7 +118,8 @@ export default {
       columnsProductos: [
         { name: 'id', required: true, label: 'id', align: 'left', field: 'id', sortable: true, classes: 'my-class', style: 'width: 200px' },
         { name: 'nombre', required: true, label: 'Nombre', align: 'left', field: 'name', sortable: true, classes: 'my-class', style: 'width: 200px' },
-        { name: 'dias_despacho', required: true, label: 'Dias despacho', align: 'left', field: 'dias_despacho', sortable: true, classes: 'my-class', style: 'width: 200px' }
+        { name: 'dias_despacho', required: true, label: 'Dias despacho', align: 'left', field: 'dias_despacho', sortable: true, classes: 'my-class', style: 'width: 200px' },
+        { name: 'actions', required: true, label: 'Acciones', align: 'left', field: 'id', sortable: true, classes: 'my-class', style: 'width: 200px' }
       ],
       separator: 'horizontal',
       filter: '',
@@ -166,6 +173,50 @@ export default {
           app.error = res.response.data.error
           app.errors = res.response.data.errors || {}
         }
+      })
+    },
+    editEstateItem (text, id) {
+      var app = this
+      app.$q.loading.show()
+      axios.get(this.$store.state.pedidosjh.url + this.urlAPI + '/estado/' + id + '/' + text).then(
+        function (response) {
+          if (response.data === true) {
+            app.$q.notify({ color: 'primary', message: 'item modificado!' })
+            axios.get(app.$store.state.pedidosjh.url + 'api/users').then(
+              function (response) {
+                app.tableData = response.data.users
+              }
+            ).catch(function (error) {
+              console.log(error)
+            }).finally(function () {
+              app.$q.loading.hide()
+            })
+          } else {
+            this.$q.notify({ color: 'negative', message: 'Hubo un error no se pudo ' + text })
+          }
+        }
+      ).catch(function (error) {
+        console.log(error)
+        app.$q.notify({ color: 'negative', message: 'Hubo un error inesperado.' })
+      }).finally(function () {
+      })
+    },
+    reinitPassword (id) {
+      var app = this
+      app.$q.loading.show()
+      axios.get(this.$store.state.pedidosjh.url + this.urlAPI + '/reinitpassword/' + id).then(
+        function (response) {
+          if (response.data === true) {
+            app.$q.notify({ color: 'primary', message: 'Contraseña reiniciada!' })
+          } else {
+            this.$q.notify({ color: 'negative', message: 'Hubo un error no se pudo reiniciar la contraseña.' })
+          }
+        }
+      ).catch(function (error) {
+        console.log(error)
+        app.$q.notify({ color: 'negative', message: 'Hubo un error inesperado.' })
+      }).finally(function () {
+        app.$q.loading.hide()
       })
     }
   },

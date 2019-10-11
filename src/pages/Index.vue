@@ -12,8 +12,14 @@ export default {
   name: 'PageIndex'
 }
 </script>
-<style>
+<style scoped>
   #logo-ppal{
     max-width: 600px;
+  }
+
+  @media screen and (max-width: 600px) {
+    #logo-ppal{
+    max-width: 300px;
+  }
   }
 </style>
