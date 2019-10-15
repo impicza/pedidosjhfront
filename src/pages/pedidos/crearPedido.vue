@@ -3,7 +3,7 @@
         <q-page padding>
             <h3>Crear Pedido</h3>
             <div class="row q-col-gutter-md">
-              <div class="col-3">
+              <div class="col-sm-3 col-12">
                 <q-select
                     class="w-100"
                     v-model="temp.producto"
@@ -27,7 +27,7 @@
                     </template>
                   </q-select>
               </div>
-              <div class="col-2">
+              <div class="col-sm-2 col-12">
                 <q-select
                     class="w-100"
                     v-model="temp.unidades"
@@ -51,19 +51,19 @@
                     </template>
                   </q-select>
               </div>
-              <div class="col-2">
+              <div class="col-sm-2 col-12">
                 <q-input type="number" v-model="temp.cantidad" label="Cantidad"/>
               </div>
-              <div class="col-2">
+              <div class="col-sm-2 col-6">
                 <q-btn color="positive" v-on:click="addProducto()" label="Agregar" />
               </div>
-              <div class="col-2">
+              <div class="col-sm-2 col-6">
                 <q-btn v-if="!showForUpdate" color="primary" v-on:click="globalValidate('guardar')" label="Guardar" />
                 <q-btn v-if="showForUpdate" color="primary" v-on:click="globalValidate('guardar-edicion', storeItems.id)" label="Guardar Edición" />
               </div>
             </div>
             <div class="row q-col-gutter-md q-mt-md">
-              <div class="col-6">
+              <div class="col-sm-6 col-12">
                 <q-table
                     title="Productos Cerdo"
                     :data="datos.productosCerdo"
@@ -98,7 +98,7 @@
                     </q-td>
                 </q-table>
               </div>
-              <div class="col-6">
+              <div class="col-sm-6 col-12">
                 <q-table
                     title="Productos Res"
                     :data="datos.productosRes"
@@ -135,58 +135,61 @@
               </div>
             </div>
             <div class="row q-mt-xl">
-              <q-table
-                  v-if="tableVisible"
-                  title= "Mis pedidos"
-                  :data="tableData"
-                  :columns="columnsPedidos"
-                  :filter="filter"
-                  :visible-columns="visibleColumns"
-                  :separator="separator"
-                  row-key="id"
-                  color="secondary"
-                  table-style="width:100%"
-              >
-                  <template slot="top-right" slot-scope="props">
-                      <q-input
-                          hide-underline
-                          color="secondary"
-                          v-model="filter"
-                          class="col-6"
-                          debounce="500"
-                      >
-                        <template v-slot:append>
-                          <q-icon name="search" />
-                        </template>
-                      </q-input>
-                      <q-btn
-                          flat round dense
-                          :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                          @click="props.toggleFullscreen"
-                      />
-                  </template>
+              <div class="col-12">
+                  <q-table
+                    v-if="tableVisible"
+                    title= "Mis pedidos"
+                    :data="tableData"
+                    :columns="columnsPedidos"
+                    :filter="filter"
+                    :visible-columns="visibleColumns"
+                    :separator="separator"
+                    row-key="id"
+                    color="secondary"
+                    table-style="width:100%"
+                >
+                    <template slot="top-right" slot-scope="props">
+                        <q-input
+                            hide-underline
+                            color="secondary"
+                            v-model="filter"
+                            class="col-6"
+                            debounce="500"
+                        >
+                          <template v-slot:append>
+                            <q-icon name="search" />
+                          </template>
+                        </q-input>
+                        <q-btn
+                            flat round dense
+                            :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                            @click="props.toggleFullscreen"
+                        />
+                    </template>
 
-                  <q-td slot="body-cell-estado" slot-scope="props" :props="props">
-                      <span v-if="parseInt(props.value) === 1">
-                      <q-badge color="negative" multi-line>
-                        Creado
-                      </q-badge>
-                    </span>
-                    <span v-if="parseInt(props.value) === 0">
-                      <q-badge color="positive" multi-line>
-                        Recibido
-                      </q-badge>
-                    </span>
-                  </q-td>
+                    <q-td slot="body-cell-estado" slot-scope="props" :props="props">
+                        <span v-if="parseInt(props.value) === 1">
+                        <q-badge color="negative" multi-line>
+                          Creado
+                        </q-badge>
+                      </span>
+                      <span v-if="parseInt(props.value) === 0">
+                        <q-badge color="positive" multi-line>
+                          Recibido
+                        </q-badge>
+                      </span>
+                    </q-td>
 
-                  <q-td slot="body-cell-actions" slot-scope="props" :props="props">
-                      <q-btn v-if="validarEstado(props.value) == 1" class="q-ml-xs" icon="edit" v-on:click="globalValidate('editar', props.value)" color="warning"></q-btn>
-                      <a v-if="validarEstado(props.value) == 0" target="_blank" :href="$store.state.pedidosjh.url+'api/pedidos/imprimirpedidocliente/'+ props.value + '?token='+ $auth.token()">
-                        <q-btn class="q-ml-xs" @click="reload" icon="assignment" color="primary">
-                        </q-btn>
-                    </a>
-                  </q-td>
-              </q-table>
+                    <q-td slot="body-cell-actions" slot-scope="props" :props="props">
+                        <q-btn v-if="validarEstado(props.value) == 1" class="q-ml-xs" icon="edit" v-on:click="globalValidate('editar', props.value)" color="warning"></q-btn>
+                        <a v-if="validarEstado(props.value) == 0" target="_blank" :href="$store.state.pedidosjh.url+'api/pedidos/imprimirpedidocliente/'+ props.value + '?token='+ $auth.token()">
+                          <q-btn class="q-ml-xs" @click="reload" icon="assignment" color="primary">
+                          </q-btn>
+                      </a>
+                    </q-td>
+                </q-table>
+              </div>
+
           </div>
         </q-page>
     </div>

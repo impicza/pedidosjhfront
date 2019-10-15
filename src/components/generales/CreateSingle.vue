@@ -4,7 +4,7 @@
 
         <h3>{{ titulo }}</h3>
         <div class="row">
-            <div class="col-6">
+            <div class="col-sm-6 col-8">
                 <q-input v-model="storeItems.nombre" :label="titulo"/>
             </div>
             <div class="col-2">
@@ -13,6 +13,7 @@
             </div>
         </div>
         <div class="row q-mt-xl">
+          <div class="col-12">
             <q-table
                 :title= titulo
                 :data="tableData"
@@ -48,6 +49,7 @@
                     <q-btn v-if="goblalValidarEstado(props.value) == 1" class="q-ml-xs" icon="remove_circle" v-on:click="globalValidate('inactivar', props.value)" color="negative"></q-btn>
                 </q-td>
             </q-table>
+          </div>
         </div>
     </q-page>
   </div>

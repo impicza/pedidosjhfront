@@ -7,7 +7,7 @@
                   <p v-else>Erreur, impossible de s'inscrire pour le moment. Si le problème persiste, veuillez contacter un administrateur.</p>
               </div>
             <div class="row q-col-gutter-md">
-                  <form  class="col-6" autocomplete="off" @submit.prevent="register" v-if="!success" method="post">
+                  <form  class="col-md-6 col-12" autocomplete="off" @submit.prevent="register" v-if="!success" method="post">
                     <div class="form-group col-6" v-bind:class="{ 'has-error': has_error && errors.name }">
                         <q-input type="text" required v-model="name" label="Nombre"/>
                         <span class="help-block" v-if="has_error && errors.name">{{ errors.name }}</span>
@@ -50,7 +50,7 @@
                 </form>
             </div>
             <div class="row q-col-gutter-md q-mt-md">
-              <div class="col-6">
+              <div class="col-md-12 col-12">
                 <q-table
                     title="Productos"
                     :data="tableData"

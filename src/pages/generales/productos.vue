@@ -3,7 +3,7 @@
         <q-page padding>
             <h3>Crear Productos</h3>
             <div class="row q-col-gutter-md">
-              <div class="col-3">
+              <div class="col-sm-3 col-12">
                 <q-select
                     class="w-100"
                     v-model="storeItems.grupo_id"
@@ -29,7 +29,7 @@
                     </template>
                   </q-select>
               </div>
-              <div class="col-3">
+              <div class="col-sm-3 col-12">
                 <q-input type="text" v-model="storeItems.nombre" label="Nombre de producto"/>
               </div>
               <div class="col-2">
@@ -37,7 +37,7 @@
               </div>
             </div>
             <div class="row q-col-gutter-md q-mt-md">
-              <div class="col-6">
+              <div class="col-12">
                 <q-table
                     title="Productos"
                     :data="tableData"

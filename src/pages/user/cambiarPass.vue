@@ -3,7 +3,7 @@
         <q-page padding>
             <h3>Usuarios</h3>
             <div class="row q-col-gutter-md">
-                  <form  class="col-6" autocomplete="off" @submit.prevent="changePass" method="post">
+                  <form  class="col-12 col-md-6" autocomplete="off" @submit.prevent="changePass" method="post">
                     <div class="form-group col-6">
                         <q-input type="password" required v-model="storeItems.old_pass" label="Password Anterior"/>
                     </div>
