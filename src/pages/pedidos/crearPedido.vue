@@ -134,6 +134,53 @@
                 </q-table>
               </div>
             </div>
+                        <div class="row q-col-gutter-md q-mt-md">
+              <div class="col-sm-6 col-12">
+                <q-table
+                    title="Otros Productos"
+                    :data="datos.productosOtros"
+                    :columns="columnsProductos"
+                    :separator="separator"
+                    :filter="filterTableOtros"
+                    row-key="id"
+                    color="secondary"
+                    table-style="width:100%"
+                >
+                  <template slot="top-right" slot-scope="props">
+                    <q-input
+                        hide-underline
+                        color="secondary"
+                        v-model="filterTableOtros"
+                        class="col-6"
+                        debounce="500"
+                    >
+                      <template v-slot:append>
+                        <q-icon name="search" />
+                      </template>
+                    </q-input>
+                    <q-btn
+                        flat round dense
+                        :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                        @click="props.toggleFullscreen"
+                    />
+                  </template>
+
+                    <q-td slot="body-cell-actions" slot-scope="props" :props="props">
+                        <q-btn icon="delete" v-on:click="eliminarFila('productosOtros',props.value)" color="negative"></q-btn>
+                    </q-td>
+                </q-table>
+              </div>
+              <div class="col-sm-6 col-12">
+                <div style="width:100%">
+                  <q-input
+                  ref="observaciones"
+                  v-model="storeItems.observaciones"
+                  type="textarea"
+                  label="Observaciones"
+                />
+                </div>
+              </div>
+            </div>
             <div class="row q-mt-xl">
               <div class="col-12">
                   <q-table
@@ -208,11 +255,13 @@ export default {
       productos: [],
       unidades: [],
       storeItems: {
-        productos: []
+        productos: [],
+        observaciones: 'Sin observaciones.'
       },
       datos: {
         productosCerdo: [],
-        productosRes: []
+        productosRes: [],
+        productosOtros: []
       },
       temp: {
         producto: null,
@@ -241,6 +290,7 @@ export default {
       filter: '',
       filterTableCerdo: '',
       filterTableRes: '',
+      filterTableOtros: '',
       tableVisible: true
     }
   },
@@ -254,6 +304,14 @@ export default {
       this.datos.productosRes.forEach((item) => {
         this.storeItems.productos.push(item)
       })
+      this.datos.productosOtros.forEach((item) => {
+        this.storeItems.productos.push(item)
+      })
+    },
+    reload () {
+      var app = this
+      this.$q.loading.show()
+      setTimeout(function () { app.globalGetForSelect('api/pedidos/listadoporcliente/' + this.$auth.user().id, 'tableData') }, 500)
     },
     postSave () {
       this.datos = {
@@ -268,6 +326,7 @@ export default {
     postEdit () {
       this.datos.productosCerdo = this.storeItems.productosCerdo
       this.datos.productosRes = this.storeItems.productosRes
+      this.datos.productosOtros = this.storeItems.productosOtros
       this.storeItems.productos = []
     },
     filterProductos (val, update, abort) {
