@@ -229,8 +229,8 @@
 
                     <q-td slot="body-cell-actions" slot-scope="props" :props="props">
                         <q-btn v-if="validarEstado(props.value) == 1" class="q-ml-xs" icon="edit" v-on:click="globalValidate('editar', props.value)" color="warning"></q-btn>
-                        <a v-if="validarEstado(props.value) == 0" target="_blank" :href="$store.state.pedidosjh.url+'api/pedidos/imprimirpedidocliente/'+ props.value + '?token='+ $auth.token()">
-                          <q-btn class="q-ml-xs" @click="reload" icon="assignment" color="primary">
+                        <a target="_blank" :href="$store.state.pedidosjh.url+'api/pedidos/imprimirpedidocliente/'+ props.value + '?token='+ $auth.token()">
+                          <q-btn class="q-ml-xs" icon="assignment" color="primary">
                           </q-btn>
                       </a>
                     </q-td>
@@ -307,11 +307,6 @@ export default {
       this.datos.productosOtros.forEach((item) => {
         this.storeItems.productos.push(item)
       })
-    },
-    reload () {
-      var app = this
-      this.$q.loading.show()
-      setTimeout(function () { app.globalGetForSelect('api/pedidos/listadoporcliente/' + this.$auth.user().id, 'tableData') }, 500)
     },
     postSave () {
       this.datos = {
